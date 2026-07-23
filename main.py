@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from typing import List
 
 app = FastAPI(title="TechNova Inventory API")
 
@@ -25,6 +26,6 @@ def get_inventory():
 
 @app.post("/api/v1/inventory", status_code=201)
 def add_item(item: Item):
-    item_dict = item.dict()
+    item_dict = item.model_dump()  # Menggunakan model_dump() aman pengganti .dict()
     inventory_db.append(item_dict)
     return item_dict
