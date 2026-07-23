@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import List
+from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI(title="TechNova Inventory API")
+
+# Mengaktifkan endpoint /metrics untuk Prometheus
+Instrumentator().instrument(app).expose(app)
 
 # Database sederhana di memory
 inventory_db = []
@@ -26,6 +29,6 @@ def get_inventory():
 
 @app.post("/api/v1/inventory", status_code=201)
 def add_item(item: Item):
-    item_dict = item.model_dump()  # Menggunakan model_dump() aman pengganti .dict()
+    item_dict = item.model_dump()
     inventory_db.append(item_dict)
     return item_dict
